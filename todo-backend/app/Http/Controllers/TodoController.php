@@ -10,6 +10,7 @@ class TodoController extends Controller
 {
     public function __construct()
     {
+        // Apply middleware 
         $this->middleware('jwt.verify');
     }
 
@@ -25,22 +26,26 @@ class TodoController extends Controller
     public function store(Request $request)
     {
         try {
+            // Validate request
             $request->validate([
                 'title' => 'required|string|max:255',
                 'description' => 'required|string|max:255',
             ]);
 
+            // Create new todo
             $todo = Todo::create([
                 'title' => $request->title,
                 'description' => $request->description,
             ]);
 
+            // Return response
             return response()->json([
                 'status' => 'success',
                 'message' => 'Todo created successfully',
                 'todo' => $todo,
             ]);
         } catch (Exception $e) {
+            // Return exception
             return response()->json([
                 'status' => 'error',
                 'message' => $e,
@@ -59,11 +64,13 @@ class TodoController extends Controller
 
     public function update(Request $request, $id)
     {
+        // Validate request
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:255',
         ]);
 
+        // Update todo data
         $todo = Todo::find($id);
         $todo->title = $request->title;
         $todo->description = $request->description;

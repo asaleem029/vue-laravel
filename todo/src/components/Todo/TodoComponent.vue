@@ -1,18 +1,26 @@
 <template>
+    <!-- Include Header Component -->
     <HeaderComponent />
-    <div>
+    <div class="m-3">
         <h3>Todo List</h3>
 
-        <!-- ADD NEW TODO BUTTON -->
-        <router-link to="/todo" custom v-slot="{ navigate }">
-            <button class="btn btn-primary" @click="navigate" role="link">
-                Add New Todo
-            </button>
-        </router-link>
+        <div class="row m-3">
+            <div class="col-sm">
+                <!-- ADD NEW TODO BUTTON -->
+                <router-link to="/todo" custom v-slot="{ navigate }">
+                    <button class="btn btn-primary" @click="navigate" role="link">
+                        Add New Todo
+                    </button>
+                </router-link>
+            </div>
 
-        <!-- SEARCH FILTER -->
-        <input v-model="searchQuery" placeholder="Search..." class="form-control form-control-sm" />
+            <div class="col-sm">
+                <!-- SEARCH FILTER -->
+                <input v-model="searchQuery" placeholder="Search..."
+                    class="form-control form-control-sm w-50  search-field" />
 
+            </div>
+        </div>
 
         <!-- TODO TABLE -->
         <table id="tableComponent" class="table table-bordered table-striped">
@@ -27,7 +35,7 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Loop through the list get the each student data -->
+                <!-- Loop through the list get the each todo data -->
                 <tr v-for="todo in filteredTodosList" :key="todo.id">
                     <td>
                         {{ todo.id }}
@@ -43,7 +51,7 @@
                             variant="primary">Edit</router-link>
                     </td>
                     <td>
-                        <button class="btn btn-danger" @click="deleteTodo(todo.id)">
+                        <button class="btn btn-danger" :disabled="deleted == true" @click="deleteTodo(todo.id)">
                             Delete
                         </button>
                     </td>
@@ -51,6 +59,8 @@
             </tbody>
         </table>
     </div>
+
+    <!-- Pagination -->
     <PaginationComponent :currentPage="currentPage" :totalItems="totalItems" :itemsPerPage="itemsPerPage"
         @page-change="handlePageChange"></PaginationComponent>
 </template>
@@ -71,6 +81,7 @@ export default {
             currentPage: 1,
             itemsPerPage: 10,
             todosList: [],
+            deleted: false
         };
     },
     computed: {
@@ -111,6 +122,7 @@ export default {
             });
         },
         deleteTodo(id) {
+            this.deleted = true;
             // Call api to delete todo
             const auth_token = localStorage.getItem('token')
             axios.delete("http://127.0.0.1:8000/api/todo/" + id, {
@@ -122,7 +134,8 @@ export default {
                 // Check status code
                 if (response.status === 200) {
                     alert(response.data.message)
-                    this.getTodos;
+                    this.deleted = false
+                    this.getTodos();
                 }
             }).catch(error => {
                 console.log(error);
@@ -134,3 +147,11 @@ export default {
     },
 };
 </script>
+
+<style>
+.search-field {
+    margin-right: 0;
+    margin-left: auto;
+    display: block;
+}
+</style>

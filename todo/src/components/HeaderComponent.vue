@@ -1,7 +1,7 @@
 <template>
     <header>
         <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <nav class="navbar navbar-expand-lg navbar-light bg-secondary mb-5">
             <div class="container-fluid">
                 <div class="collapse navbar-collapse">
                     <h3>TODO APP</h3>

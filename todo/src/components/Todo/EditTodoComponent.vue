@@ -1,8 +1,9 @@
 <template>
+    <!-- Include Header Component -->
     <HeaderComponent />
     <div>
-        <h3>Edit New Todo</h3>
-        <form @submit.prevent="updateTodo(todoData.id)">
+        <form class="w-50 ml-3" style="margin-left: 25%;" @submit.prevent="updateTodo(todoData.id)">
+            <h3>Edit New Todo</h3>
             <input type="hidden" id="id" v-model="todoData.id" />
 
             <!-- Title input -->
@@ -20,9 +21,18 @@
                 </textarea>
             </div>
 
-            <div class="text-center text-lg-start mt-4 pt-2">
-                <button type="submit" class="btn btn-primary btn-lg"
-                    style="padding-left: 2.5rem; padding-right: 2.5rem;">Update</button>
+            <div class="row text-lg-start mt-4 pt-2 ">
+                <div class="col-sm">
+                    <button type="submit" saved class="btn btn-primary btn-md float-right">Update</button>
+                </div>
+
+                <div class="col-sm">
+                    <router-link to="/todos" custom v-slot="{ navigate }">
+                        <button class="btn btn-primary btn-md" @click="navigate" role="link">
+                            Cancel
+                        </button>
+                    </router-link>
+                </div>
             </div>
         </form>
     </div>
@@ -35,7 +45,6 @@ export default {
     components: {
         HeaderComponent,
     },
-
     data() {
         return {
             todoData: {
@@ -45,7 +54,6 @@ export default {
             }
         };
     },
-
     methods: {
         getTodo() {
             const id = this.$route.params.id;
@@ -59,6 +67,7 @@ export default {
             }).then(response => {
                 // Check status code
                 if (response.status === 200) {
+                    // Set form data
                     this.todoData.id = response.data.todo.id;
                     this.todoData.title = response.data.todo.title;
                     this.todoData.description = response.data.todo.description;

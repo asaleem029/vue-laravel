@@ -2,7 +2,7 @@
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             <li class="page-item" v-for="page in totalPages" :key="page">
-                <a class="page-link" @click="changePage(page)">{{ page }}</a>
+                <a class="page-link bg-secondary" @click="changePage(page)">{{ page }}</a>
             </li>
         </ul>
     </nav>

@@ -21,6 +21,7 @@
                         <div class="text-center text-lg-start mt-4 pt-2">
                             <button type="submit" class="btn btn-primary btn-lg"
                                 style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
+                                
                             <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account?
                                 <router-link to="/signup" custom v-slot="{ navigate }">
                                     <a class="link-danger" @click="navigate" role="link">
@@ -61,11 +62,13 @@ export default {
                     // Save access token in local storage
                     const token = response.data.access_token;
                     localStorage.setItem('token', token);
+                    // Redirect to todos list page
                     this.$router.push('todos');
                 }
             }).catch(error => {
                 console.log(error)
-                if (error.response.data.error && error.response.data.error == "Please Verify Email") {
+                // If email is not verified redirect to Verify Email Page
+                if (error.response && error.response.data.error == "Please Verify Email") {
                     var userEmail = this.loginData.email
                     this.$router.push({
                         name: "VerifyOTP",

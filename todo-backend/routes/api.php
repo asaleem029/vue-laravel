@@ -16,10 +16,7 @@ use App\Http\Controllers\TodoController;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
+// Auth Routes
 Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
     Route::post('register', 'register');
@@ -27,6 +24,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('verifyOtp', 'verifyOtp');
 });
 
+// Todos Routes
 Route::controller(TodoController::class)->group(function () {
     Route::get('todos', 'index');
     Route::post('todo', 'store');

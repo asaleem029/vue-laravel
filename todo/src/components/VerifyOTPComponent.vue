@@ -53,6 +53,7 @@ export default {
                     // Save access token in local storage
                     const token = response.data.access_token;
                     localStorage.setItem('token', token);
+                    // Redirect to todos list page
                     this.$router.push('todos');
                 }
             }).catch(error => {

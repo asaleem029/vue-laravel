@@ -37,7 +37,7 @@ class OTPMail extends Mailable
      */
     public function build()
     {
-        return $this->from('asaleem029@gmail.com')
+        return $this->from('todo@support.com')
             ->subject($this->demo['subject'])
             ->view('otp', ['message' => $this->demo['message']]);
     }
