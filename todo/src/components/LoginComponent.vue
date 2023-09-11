@@ -19,9 +19,9 @@
                         </div>
 
                         <div class="text-center text-lg-start mt-4 pt-2">
-                            <button type="submit" class="btn btn-primary btn-lg"
+                            <button type="submit" class="btn btn-primary btn-lg" :disabled="isSubmitting"
                                 style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
-                                
+
                             <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account?
                                 <router-link to="/signup" custom v-slot="{ navigate }">
                                     <a class="link-danger" @click="navigate" role="link">
@@ -46,12 +46,14 @@ export default {
             loginData: {
                 email: "",
                 password: "",
-            }
+            },
+            isSubmitting: false
         };
     },
     methods: {
         // Log in with the email and password
         userLogin() {
+            this.isSubmitting = true;
             axios.post("http://127.0.0.1:8000/api/login", this.loginData, {
                 headers: {
                     "content-type": "text/json",
@@ -64,8 +66,10 @@ export default {
                     localStorage.setItem('token', token);
                     // Redirect to todos list page
                     this.$router.push('todos');
+                    this.isSubmitting = false;
                 }
             }).catch(error => {
+                this.isSubmitting = false;
                 console.log(error)
                 // If email is not verified redirect to Verify Email Page
                 if (error.response && error.response.data.error == "Please Verify Email") {

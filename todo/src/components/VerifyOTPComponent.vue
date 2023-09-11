@@ -8,7 +8,8 @@
                         <!-- ReadOnly Email input -->
                         <div class="form-outline mb-4">
                             <label class="form-label" for="email">User Email</label>
-                            <input type="email" v-model="otpData.email" id="email" class="form-control form-control-lg" readonly />
+                            <input type="email" v-model="otpData.email" id="email" class="form-control form-control-lg"
+                                readonly />
                         </div>
 
                         <!-- OTP input -->
@@ -18,7 +19,7 @@
                         </div>
 
                         <div class="text-center text-lg-start mt-4 pt-2">
-                            <button type="submit" class="btn btn-primary btn-lg"
+                            <button type="submit" class="btn btn-primary btn-lg" :disabled="isSubmitting"
                                 style="padding-left: 2.5rem; padding-right: 2.5rem;">Verify</button>
                         </div>
                     </form>
@@ -37,11 +38,13 @@ export default {
             otpData: {
                 email: this.$route.params.data ? this.$route.params.data : "",
                 otp: "",
-            }
+            },
+            isSubmitting: false
         };
     },
     methods: {
         verifyOtp() {
+            this.isSubmitting = true;
             // Call API to verify OTP 
             axios.post("http://127.0.0.1:8000/api/verifyOtp", this.otpData, {
                 headers: {
@@ -55,9 +58,11 @@ export default {
                     localStorage.setItem('token', token);
                     // Redirect to todos list page
                     this.$router.push('todos');
+                    this.isSubmitting = false;
                 }
             }).catch(error => {
                 alert(error);
+                this.isSubmitting = false;
             });
         },
     },

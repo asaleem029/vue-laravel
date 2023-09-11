@@ -5,7 +5,7 @@
             <div class="container-fluid">
                 <div class="collapse navbar-collapse">
                     <h3>TODO APP</h3>
-                    <button class="btn btn-danger logout-button" @click="userLogout">
+                    <button class="btn btn-danger logout-button" :disabled="isSubmitting" @click="userLogout">
                         Log-Out
                     </button>
                 </div>
@@ -19,8 +19,14 @@
 import axios from 'axios';
 
 export default {
+    data() {
+        return {
+            isSubmitting: false
+        };
+    },
     methods: {
         userLogout() {
+            this.isSubmitting = true;
             const auth_token = localStorage.getItem('token')
             axios.post("http://127.0.0.1:8000/api/logout", {
                 headers: {
@@ -32,10 +38,12 @@ export default {
                     // Remove access token from local storage
                     localStorage.removeItem('token');
                     this.$router.push('/login');
+                    this.isSubmitting = false;
                 }
             }).catch(error => {
                 console.log(error)
                 alert(error);
+                this.isSubmitting = true;
             });
         },
     },

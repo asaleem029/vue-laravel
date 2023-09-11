@@ -23,7 +23,8 @@
 
             <div class="row text-lg-start mt-4 pt-2 ">
                 <div class="col-sm">
-                    <button type="submit" saved class="btn btn-primary btn-md float-right">Update</button>
+                    <button type="submit" :disabled="isSubmitting"
+                        class="btn btn-primary btn-md float-right">Update</button>
                 </div>
 
                 <div class="col-sm">
@@ -51,11 +52,13 @@ export default {
                 id: "",
                 title: "",
                 description: "",
-            }
+            },
+            isSubmitting: false
         };
     },
     methods: {
         getTodo() {
+            this.isSubmitting = true;
             const id = this.$route.params.id;
             // Call get api to get todo 
             const auth_token = localStorage.getItem('token')
@@ -71,14 +74,17 @@ export default {
                     this.todoData.id = response.data.todo.id;
                     this.todoData.title = response.data.todo.title;
                     this.todoData.description = response.data.todo.description;
-
+                    this.isSubmitting = false;
                 }
             }).catch(error => {
                 console.log(error);
+                this.isSubmitting = true;
             });
         },
-        // Save New Todo
+
+        // Update Todo data
         updateTodo() {
+            this.isSubmitting = true;
             // Call put api to update todo data
             const auth_token = localStorage.getItem('token')
             axios.put("http://127.0.0.1:8000/api/todo/" + this.todoData.id, this.todoData, {
@@ -92,9 +98,11 @@ export default {
                     // Redirect to Todo List 
                     alert(response.data.message)
                     this.$router.push("/todos");
+                    this.isSubmitting = false;
                 }
             }).catch(error => {
                 console.log(error);
+                this.isSubmitting = false;
             });
         },
     },

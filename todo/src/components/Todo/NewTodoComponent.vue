@@ -22,7 +22,7 @@
 
             <div class="row text-lg-start mt-4 pt-2 ">
                 <div class="col-sm">
-                    <button type="submit" class="btn btn-primary btn-md float-right">Save</button>
+                    <button type="submit" :disabled="isSubmitting" class="btn btn-primary btn-md float-right">Save</button>
                 </div>
 
                 <div class="col-sm">
@@ -49,12 +49,14 @@ export default {
             todoData: {
                 title: "",
                 description: "",
-            }
+            },
+            isSubmitting: false
         };
     },
     methods: {
         // Save New Todo
         newTodo() {
+            this.isSubmitting = true;
             // Call post api to create new todo
             const auth_token = localStorage.getItem('token')
             axios.post("http://127.0.0.1:8000/api/todo", this.todoData, {
@@ -68,9 +70,11 @@ export default {
                     // Redirect to Todo List 
                     alert(response.data.message)
                     this.$router.push("todos");
+                    this.isSubmitting = false;
                 }
             }).catch(error => {
                 console.log(error);
+                this.isSubmitting = false;
             });
         },
     },

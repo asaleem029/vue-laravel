@@ -34,7 +34,7 @@
                         </div>
 
                         <div class="text-center text-lg-start mt-4 pt-2">
-                            <button type="submit" class="btn btn-primary btn-lg"
+                            <button type="submit" class="btn btn-primary btn-lg" :disabled="isSubmitting"
                                 style="padding-left: 2.5rem; padding-right: 2.5rem;">Register</button>
                         </div>
                     </form>
@@ -55,13 +55,15 @@ export default {
                 email: "",
                 password: "",
                 c_password: "",
-            }
+            },
+            isSubmitting: false
         };
     },
 
     methods: {
         // Sign Up new user
         userSignup() {
+            this.isSubmitting = true;
             // Check password and confirm password are same
             if (this.userData.password != this.userData.c_password) {
                 alert("Password and Confirm Password sould be same");
@@ -80,9 +82,12 @@ export default {
                             name: "VerifyOTP",
                             params: { data: userEmail }
                         });
+
+                        this.isSubmitting = false;
                     }
                 }).catch(error => {
                     console.log(error);
+                    this.isSubmitting = false;
                 });
             }
         },
