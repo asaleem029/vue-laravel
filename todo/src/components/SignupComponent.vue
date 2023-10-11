@@ -87,6 +87,11 @@ export default {
                     }
                 }).catch(error => {
                     console.log(error);
+
+                    if(error.response && error.response.data) {
+                        let error_msg = JSON.parse(error.response.data);
+                        alert(error_msg.email)
+                    }
                     this.isSubmitting = false;
                 });
             }
