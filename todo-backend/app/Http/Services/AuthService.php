@@ -154,4 +154,16 @@ class AuthService
             return $e->getMessage();
         }
     }
+
+    public function logout($data)
+    {
+        try {
+            Auth::logout($data);
+            return response()->json([
+                'message' => 'Successfully logged out',
+            ], 200);
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
 }
