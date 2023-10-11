@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Mail\OTPMail;
 use Exception;
@@ -103,6 +104,52 @@ class AuthService
                 // Return response with JWT token
                 return response()->json(["status" => 200, "message" => "Success", 'user' => $user, 'access_token' => $token]);
             }
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function login($data)
+    {
+        try {
+            // Validate request
+            $validator = Validator::make($data->all(), [
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
+            }
+
+            if (!$token = Auth::attempt($validator->validated())) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+
+            $user = Auth::user();
+
+            if ($user->email_verified_at !== NULL) {
+                // If email is verified return jwt token
+                return $this->respondWithToken($token);
+            } else {
+                // If email is not verified send OTP to users email
+                $this->requestOtp($data->get('email'));
+                return response()->json(['message' => 'Please Verify Email'], 200);
+            }
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    protected function respondWithToken($token)
+    {
+        try {
+            // Respond JWT token
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'bearer', // Set token type
+                'expires_in' => Auth::factory()->getTTL() * 60 // set expiry time
+            ]);
         } catch (Exception $e) {
             return $e->getMessage();
         }

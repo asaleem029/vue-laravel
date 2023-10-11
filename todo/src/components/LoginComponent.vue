@@ -59,8 +59,15 @@ export default {
                     "content-type": "text/json",
                 },
             }).then(response => {
-                // Check status
-                if (response.status === 200) {
+                console.log(response);
+                // If email is not verified redirect to Verify Email Page
+                if (response.data && response.data.message == "Please Verify Email") {
+                    let userEmail = this.loginData.email
+                    this.$router.push({
+                        name: "VerifyOTP",
+                        params: { data: userEmail }
+                    });
+                } else if (response.status === 200 && response.data.access_token) { 
                     // Save access token in local storage
                     const token = response.data.access_token;
                     localStorage.setItem('token', token);
@@ -71,16 +78,6 @@ export default {
             }).catch(error => {
                 this.isSubmitting = false;
                 console.log(error)
-                // If email is not verified redirect to Verify Email Page
-                if (error.response && error.response.data.error == "Please Verify Email") {
-                    var userEmail = this.loginData.email
-                    this.$router.push({
-                        name: "VerifyOTP",
-                        params: { data: userEmail }
-                    });
-                } else {
-                    alert(error);
-                }
             });
         },
     },
