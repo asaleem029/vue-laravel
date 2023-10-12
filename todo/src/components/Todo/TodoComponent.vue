@@ -86,7 +86,7 @@ export default {
     },
     computed: {
         totalItems() {
-            return this.todosList.length;
+            return this.todosList ? this.todosList.length : [];
         },
         filteredTodosList() {
             if (this.searchQuery) {
@@ -96,7 +96,7 @@ export default {
             } else {
                 const start = (this.currentPage - 1) * this.itemsPerPage;
                 const end = start + this.itemsPerPage;
-                return this.todosList.slice(start, end);
+                return  this.todosList ? this.todosList.slice(start, end) : [];
             }
         }
     },
