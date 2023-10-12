@@ -70,6 +70,14 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const token = localStorage.getItem('token');
 
+    if(token) {
+        const jwtExpTime = JSON.parse(window.atob(token.split('.')[1]))
+    
+        if(jwtExpTime.exp * 1000 < Date.now()) {
+            localStorage.removeItem("token")
+        }
+    }
+
     if (to.meta.requiresAuth) {
         if (!token || token == null || token == 'undefined' || token == undefined) {
             // User is not authenticated, redirect to login
